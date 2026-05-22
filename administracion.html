@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Administración | The Order</title>
+  <style>
+    :root {
+      --photo: url("../adry3.png");
+      --accent: #c92a25;
+      --gold: #d8ae4f;
+      --text: #f3eee2;
+      --muted: #b9b0a0;
+      --panel: rgba(9, 10, 13, 0.82);
+      --line: rgba(216, 174, 79, 0.30);
+      --font-main: Arial, Helvetica, sans-serif;
+      --font-mono: Consolas, "Courier New", monospace;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.72);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: var(--font-main);
+      background: #050507;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(100deg, rgba(5,5,7,0.97) 0%, rgba(5,5,7,0.76) 45%, rgba(5,5,7,0.92) 100%),
+        var(--photo) center / cover no-repeat;
+      filter: saturate(0.85) contrast(1.08) brightness(0.62);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--accent) 34%, transparent), transparent 26rem),
+        linear-gradient(90deg, rgba(216,174,79,0.07) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: auto, 90px 90px, 90px 90px;
+      opacity: 0.72;
+    }
+
+    .page {
+      width: min(1220px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1rem 0 4rem;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0 2rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3rem;
+      padding: 0.85rem 1.15rem;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: linear-gradient(135deg, var(--accent), rgba(12,14,18,0.92));
+      clip-path: polygon(0 0, calc(100% - 13px) 0, 100% 13px, 100% 100%, 13px 100%, 0 calc(100% - 13px));
+      box-shadow: 0 16px 38px rgba(0,0,0,0.48);
+      transition: transform 180ms ease, border-color 180ms ease, filter 180ms ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); border-color: rgba(216,174,79,0.65); filter: brightness(1.08); }
+
+    /* Cabecera de propaganda con datos operativos. */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.22fr);
+      gap: clamp(1rem, 3vw, 2rem);
+      align-items: stretch;
+      padding: clamp(1rem, 2vw, 1.4rem);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(145deg, rgba(9,10,13,0.90), rgba(5,5,7,0.92)),
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 12px);
+      box-shadow: var(--shadow);
+    }
+
+    .portrait {
+      min-height: 620px;
+      border: 1px solid rgba(255,255,255,0.13);
+      background: var(--photo) center / cover no-repeat;
+      box-shadow: inset 0 -120px 110px rgba(0,0,0,0.72);
+    }
+
+    .brief {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.1rem;
+      padding: clamp(0.4rem, 2vw, 1.2rem);
+    }
+
+    .kicker, .stamp {
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 12ch;
+      font-size: clamp(1.9rem, 4.1vw, 4.3rem);
+      line-height: 0.98;
+      letter-spacing: -0.035em;
+      text-transform: uppercase;
+      text-wrap: balance;
+      overflow-wrap: normal;
+      word-break: normal;
+    }
+
+    .lead {
+      max-width: 760px;
+      margin: 0;
+      color: #ddd5c7;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      line-height: 1.75;
+    }
+
+    .intel {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+
+    .intel div, .file-card {
+      border: 1px solid rgba(255,255,255,0.11);
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+    }
+
+    .intel div { padding: 0.9rem; }
+    .intel span, .file-card h2 {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .intel strong { font-size: 1rem; text-transform: uppercase; }
+
+    .dossier {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .file-card {
+      min-height: 190px;
+      padding: 1.1rem;
+      box-shadow: 0 20px 44px rgba(0,0,0,0.35);
+    }
+
+    .file-card.wide { grid-column: span 2; }
+    .file-card p { margin: 0; color: #d5cfc2; line-height: 1.72; }
+
+    @media (max-width: 900px) {
+      .topbar, .hero { grid-template-columns: 1fr; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .portrait { min-height: 430px; }
+      .intel, .dossier { grid-template-columns: 1fr; }
+      .file-card.wide { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <span>The Order / Expediente clasificado / Administración</span>
+      <a class="btn" href="index.html" onclick="if (history.length > 1) { history.back(); return false; }">Volver a la página principal</a>
+    </header>
+
+    <section class="hero">
+      <div class="portrait" aria-label="Imagen principal de La Administración"></div>
+      <div class="brief">
+        <span class="kicker">Autoridad central</span>
+        <h1>La Administración</h1>
+        <p class="lead">La Administración es el bloque que intenta convertir un mundo fracturado en un sistema gobernable. No vence solo con armas: vence con permisos, decretos, expedientes y control de infraestructura.</p>
+
+        <div class="intel">
+          <div><span>Estado</span><strong>Activo</strong></div>
+          <div><span>Doctrina</span><strong>Orden civil</strong></div>
+          <div><span>Prioridad</span><strong>Control</strong></div>
+          <div><span>Riesgo</span><strong>Alto</strong></div>
+        </div>
+
+        <span class="stamp">Documento sujeto a revisión del alto mando</span>
+      </div>
+    </section>
+
+    <section class="dossier">
+      <article class="file-card">
+        <h2>Quién lo efectúa</h2>
+        <p>Dirección central provisional, funcionarios de campo, operadores de registro y mandos encargados de sostener la continuidad del servidor incluso durante periodos de guerra abierta.</p>
+      </article>
+      <article class="file-card">
+        <h2>Descripción</h2>
+        <p>Su fuerza está en la legitimidad. Administra permisos, sanciones, recursos comunes y protocolos de emergencia para que el conflicto no destruya por completo el mundo compartido.</p>
+      </article>
+      <article class="file-card">
+        <h2>Ideología / Objetivo</h2>
+        <p>Imponer orden sobre el caos, centralizar decisiones críticas y construir una autoridad capaz de sobrevivir a facciones armadas, sabotajes industriales y crisis políticas.</p>
+      </article>
+      <article class="file-card wide">
+        <h2>Rol en el mundo</h2>
+        <p>La Administración funciona como la sombra burocrática detrás de cada frontera. Donde otros levantan fortalezas, este bloque levanta registros, tribunales, rutas oficiales y líneas rojas que nadie debería cruzar sin asumir consecuencias.</p>
+      </article>
+      <article class="file-card">
+        <h2>Recursos estratégicos</h2>
+        <p>Archivos, autoridad pública, canales diplomáticos, acceso a información sensible y capacidad para declarar zonas restringidas.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
+

@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AFAE | The Order</title>
+  <style>
+    :root { --photo:url("../alberto2.png"); --accent:#1d5c8f; --gold:#d8ae4f; --text:#f3eee2; --muted:#b9b0a0; --panel:rgba(9,10,13,.82); --line:rgba(216,174,79,.30); --font-main:Arial,Helvetica,sans-serif; --font-mono:Consolas,"Courier New",monospace; --shadow:0 30px 90px rgba(0,0,0,.72); }
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;color:var(--text);font-family:var(--font-main);background:#050507}
+    body::before{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradient(100deg,rgba(5,5,7,.97),rgba(5,5,7,.72) 45%,rgba(5,5,7,.93)),var(--photo) center/cover no-repeat;filter:saturate(.85) contrast(1.08) brightness(.62)}
+    body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 78% 18%,color-mix(in srgb,var(--accent) 38%,transparent),transparent 26rem),linear-gradient(90deg,rgba(216,174,79,.07) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:auto,90px 90px,90px 90px;opacity:.72}
+    .page{width:min(1220px,calc(100% - 2rem));margin:0 auto;padding:1rem 0 4rem}.topbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 0 2rem;color:var(--muted);font-family:var(--font-mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:3rem;padding:.85rem 1.15rem;color:#fff;text-decoration:none;font-size:.78rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;border:1px solid rgba(255,255,255,.16);background:linear-gradient(135deg,var(--accent),rgba(12,14,18,.92));clip-path:polygon(0 0,calc(100% - 13px) 0,100% 13px,100% 100%,13px 100%,0 calc(100% - 13px));box-shadow:0 16px 38px rgba(0,0,0,.48);transition:transform .18s ease,border-color .18s ease,filter .18s ease}.btn:hover{transform:translateY(-2px);border-color:rgba(216,174,79,.65);filter:brightness(1.08)}
+    /* Cabecera de propaganda con datos operativos. */
+    .hero{display:grid;grid-template-columns:minmax(280px,.78fr) minmax(0,1.22fr);gap:clamp(1rem,3vw,2rem);align-items:stretch;padding:clamp(1rem,2vw,1.4rem);border:1px solid var(--line);background:linear-gradient(145deg,rgba(9,10,13,.90),rgba(5,5,7,.92)),repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 1px,transparent 1px 12px);box-shadow:var(--shadow)}
+    .portrait{min-height:620px;border:1px solid rgba(255,255,255,.13);background:var(--photo) center/cover no-repeat;box-shadow:inset 0 -120px 110px rgba(0,0,0,.72)}.brief{display:flex;flex-direction:column;justify-content:center;gap:1.1rem;padding:clamp(.4rem,2vw,1.2rem)}
+    .kicker,.stamp{color:var(--gold);font-family:var(--font-mono);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase}h1{margin:0;font-size:clamp(3rem,7vw,7rem);line-height:.88;letter-spacing:-.055em;text-transform:uppercase;text-wrap:balance}.lead{max-width:760px;margin:0;color:#ddd5c7;font-size:clamp(1rem,2vw,1.25rem);line-height:1.75}
+    .intel{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:1rem 0}.intel div,.file-card{border:1px solid rgba(255,255,255,.11);background:var(--panel);backdrop-filter:blur(10px)}.intel div{padding:.9rem}.intel span,.file-card h2{display:block;margin-bottom:.5rem;color:var(--gold);font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase}.intel strong{font-size:1rem;text-transform:uppercase}
+    .dossier{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem}.file-card{min-height:190px;padding:1.1rem;box-shadow:0 20px 44px rgba(0,0,0,.35)}.file-card.wide{grid-column:span 2}.file-card p{margin:0;color:#d5cfc2;line-height:1.72}
+    @media(max-width:900px){.topbar,.hero{grid-template-columns:1fr}.topbar{align-items:flex-start;flex-direction:column}.portrait{min-height:430px}.intel,.dossier{grid-template-columns:1fr}.file-card.wide{grid-column:auto}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar"><span>The Order / Expediente clasificado / AFAE</span><a class="btn" href="index.html" onclick="if (history.length > 1) { history.back(); return false; }">Volver a la página principal</a></header>
+    <section class="hero"><div class="portrait" aria-label="Imagen principal de AFAE"></div><div class="brief"><span class="kicker">Fuerza de seguridad nocturna</span><h1>AFAE</h1><p class="lead">AFAE opera como una fuerza de frontera: vigilancia, patrullas, dominio urbano y control de zonas donde la noche convierte cada calle en una amenaza.</p><div class="intel"><div><span>Estado</span><strong>Activo</strong></div><div><span>Doctrina</span><strong>Disciplina</strong></div><div><span>Prioridad</span><strong>Defensa</strong></div><div><span>Riesgo</span><strong>Medio alto</strong></div></div><span class="stamp">Comunicación interna bajo protocolo de seguridad</span></div></section>
+    <section class="dossier">
+      <article class="file-card"><h2>Quién lo efectúa</h2><p>Mandos de operaciones avanzadas, patrullas de intervención, técnicos de vigilancia y personal entrenado para asegurar rutas, perímetros y bases estratégicas.</p></article>
+      <article class="file-card"><h2>Descripción</h2><p>Su identidad nace del control del terreno. AFAE no necesita grandes discursos: su autoridad se reconoce en puestos de vigilancia, luces azules y presencia armada constante.</p></article>
+      <article class="file-card"><h2>Ideología / Objetivo</h2><p>Proteger su zona de influencia, responder rápido a incursiones enemigas y levantar una estructura militar-tecnológica capaz de sobrevivir a asedios prolongados.</p></article>
+      <article class="file-card wide"><h2>Rol en el mundo</h2><p>En el equilibrio entre facciones, AFAE representa seguridad, frontera y presión táctica. Su territorio ideal es aquel donde cada entrada está observada y cada recurso tiene custodia.</p></article>
+      <article class="file-card"><h2>Recursos estratégicos</h2><p>Patrullas, arsenales defensivos, inteligencia de rutas, comunicaciones de guardia y capacidad de fortificación.</p></article>
+    </section>
+  </main>
+</body>
+</html>
+

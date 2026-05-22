@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Order | Servidor Minecraft</title>
+
+  <style>
+    :root {
+      --bg: #050507;
+      --bg-2: #0d1018;
+      --panel: rgba(10, 12, 16, 0.84);
+      --panel-solid: #10131a;
+      --line: rgba(218, 184, 91, 0.34);
+      --gold: #d8ae4f;
+      --red: #c92a25;
+      --red-dark: #681411;
+      --blue: #1d5c8f;
+      --purple: #6f39b9;
+      --green: #52d36e;
+      --muted: #a6a8ad;
+      --text: #f3eee2;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.62);
+      --font-main: "Arial", "Helvetica", sans-serif;
+      --font-mono: "Consolas", "Courier New", monospace;
+      --server-ip: "85.251.85.205:25565";
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 12%, rgba(201, 42, 37, 0.20), transparent 28rem),
+        radial-gradient(circle at 86% 22%, rgba(74, 36, 132, 0.27), transparent 25rem),
+        radial-gradient(circle at 50% 78%, rgba(24, 70, 108, 0.23), transparent 30rem),
+        linear-gradient(135deg, #030304 0%, #090b11 42%, #120707 100%);
+      font-family: var(--font-main);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    body::before {
+      opacity: 0.32;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(to bottom, black 0%, transparent 82%);
+    }
+
+    body::after {
+      background:
+        radial-gradient(circle at 28% 36%, rgba(231, 146, 40, 0.12), transparent 17rem),
+        repeating-linear-gradient(115deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 12px);
+      mix-blend-mode: screen;
+      opacity: 0.32;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .site-shell {
+      position: relative;
+      isolation: isolate;
+    }
+
+    /* Header fijo con navegación de estilo operativo. */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem clamp(1rem, 3vw, 3rem);
+      border-bottom: 1px solid rgba(216, 174, 79, 0.20);
+      background: rgba(5, 5, 7, 0.76);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 3.2rem;
+      height: 3.2rem;
+      border: 1px solid rgba(216,174,79,0.42);
+      background: #050507;
+      box-shadow: 0 0 24px rgba(216, 174, 79, 0.22);
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 0.95rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      display: block;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .nav-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .nav-pills a {
+      padding: 0.55rem 0.8rem;
+      color: #d7d2c6;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .nav-pills a:hover {
+      color: #fff;
+      border-color: rgba(216, 174, 79, 0.58);
+      background: rgba(216, 174, 79, 0.12);
+    }
+
+    /* Hero cinematográfico: imagen de guerra, humo visual y llamada principal. */
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.75fr);
+      gap: clamp(1.4rem, 4vw, 4rem);
+      align-items: center;
+      min-height: 88vh;
+      padding: clamp(4rem, 8vw, 8rem) clamp(1rem, 5vw, 5rem) clamp(3rem, 6vw, 5rem);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(110deg, rgba(5,5,7,0.98) 0%, rgba(8,10,16,0.94) 44%, rgba(18,7,12,0.92) 100%),
+        radial-gradient(circle at 72% 26%, rgba(111,57,185,0.26), transparent 26rem),
+        radial-gradient(circle at 88% 72%, rgba(201,42,37,0.22), transparent 26rem),
+        radial-gradient(circle at 18% 82%, rgba(29,92,143,0.20), transparent 24rem),
+        linear-gradient(135deg, #050507 0%, #0a1019 52%, #120707 100%);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(90deg, rgba(216,174,79,0.44) 0 1px, transparent 1px 100%),
+        linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 100%),
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 14px),
+        radial-gradient(ellipse at 52% 118%, rgba(201,42,37,0.28), transparent 54%);
+      background-size: 180px 100%, 100% 120px, auto, auto;
+      mask-image: linear-gradient(to bottom, black 0%, rgba(0,0,0,0.86) 58%, transparent 100%);
+      opacity: 0.54;
+    }
+
+    .hero-copy {
+      position: relative;
+    }
+
+    .hero-copy::before {
+      content: "";
+      position: absolute;
+      left: -1rem;
+      top: -1.3rem;
+      width: min(34rem, 80vw);
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      box-shadow: 0 0 22px rgba(216,174,79,0.35);
+    }
+
+    .eyebrow,
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin: 0 0 1rem;
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before,
+    .section-kicker::before {
+      content: "";
+      width: 2.4rem;
+      height: 1px;
+      background: currentColor;
+      box-shadow: 0 0 12px currentColor;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 1.1rem;
+      font-size: clamp(3.3rem, 9vw, 8.4rem);
+      line-height: 0.86;
+      letter-spacing: -0.055em;
+      text-transform: uppercase;
+      text-shadow: 0 12px 44px rgba(0, 0, 0, 0.75);
+    }
+
+    .hero-lead {
+      max-width: 780px;
+      color: #d8d2c5;
+      font-size: clamp(1.02rem, 2vw, 1.32rem);
+      line-height: 1.65;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 2rem 0 1.7rem;
+    }
+
+    .hero-emblem {
+      position: relative;
+      min-height: 520px;
+      align-self: stretch;
+      border: 1px solid rgba(216,174,79,0.27);
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.52)),
+        url("../ChatGPT Image 22 may 2026, 21_50_30.png") center / cover no-repeat;
+      box-shadow: var(--shadow);
+      clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+    }
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      min-height: 3rem;
+      padding: 0.85rem 1.2rem;
+      color: #f8f4eb;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      font-size: 0.76rem;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: linear-gradient(135deg, rgba(201,42,37,0.92), rgba(105,16,16,0.88));
+      clip-path: polygon(0 0, calc(100% - 13px) 0, 100% 13px, 100% 100%, 13px 100%, 0 calc(100% - 13px));
+      box-shadow: 0 12px 32px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.16);
+      cursor: pointer;
+      transition: transform 180ms ease, border-color 180ms ease, filter 180ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(216, 174, 79, 0.62);
+      filter: brightness(1.08);
+    }
+
+    .btn.secondary {
+      background: linear-gradient(135deg, rgba(216,174,79,0.26), rgba(20,22,28,0.92));
+    }
+
+    .copy-feedback {
+      min-height: 1.2rem;
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .quick-status {
+      align-self: stretch;
+      display: grid;
+      gap: 1rem;
+      padding: 1rem;
+      border: 1px solid rgba(216,174,79,0.27);
+      background:
+        linear-gradient(145deg, rgba(11,13,18,0.88), rgba(22,12,12,0.76)),
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 10px);
+      box-shadow: var(--shadow);
+      clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+    }
+
+    .quick-status-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.95rem;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.28);
+    }
+
+    .quick-status-header span {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .signal {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .signal::before {
+      content: "";
+      width: 0.7rem;
+      height: 0.7rem;
+      border-radius: 999px;
+      background: currentColor;
+      box-shadow: 0 0 18px currentColor;
+    }
+
+    .signal.online {
+      color: var(--green);
+    }
+
+    .signal.offline {
+      color: #ff5555;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    .quick-metric {
+      min-height: 7rem;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.045);
+    }
+
+    .quick-metric span,
+    .stat-card span {
+      display: block;
+      margin-bottom: 0.6rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .quick-metric strong,
+    .stat-card strong {
+      display: block;
+      font-size: clamp(1.25rem, 2.4vw, 1.8rem);
+      line-height: 1.05;
+      word-break: break-word;
+    }
+
+    #serverIp {
+      font-size: clamp(0.92rem, 1.35vw, 1.12rem);
+      letter-spacing: 0.02em;
+      word-break: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .section {
+      padding: clamp(3.5rem, 7vw, 7rem) clamp(1rem, 5vw, 5rem);
+    }
+
+    .section-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .section-title {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 1.2rem;
+      align-items: end;
+      margin-bottom: 1.6rem;
+    }
+
+    .section-title h2 {
+      margin-bottom: 0;
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: -0.035em;
+    }
+
+    .section-title p {
+      max-width: 650px;
+      margin: 0.8rem 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* Panel conectado a la API de estado del servidor. */
+    .status-panel {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.88fr) minmax(0, 1.12fr);
+      gap: 1rem;
+      padding: clamp(1rem, 2vw, 1.4rem);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(145deg, rgba(14,16,22,0.94), rgba(8,8,10,0.94)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 18px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .status-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 0 48%, rgba(201,42,37,0.12) 50%, transparent 52%),
+        linear-gradient(0deg, transparent 0 48%, rgba(216,174,79,0.10) 50%, transparent 52%);
+      background-size: 140px 140px;
+      opacity: 0.26;
+      pointer-events: none;
+    }
+
+    .status-image {
+      position: relative;
+      width: min(100%, 420px);
+      aspect-ratio: 1 / 1;
+      justify-self: center;
+      border: 1px solid rgba(255,255,255,0.10);
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.28)),
+        url("../ChatGPT Image 22 may 2026, 21_50_30.png") center / contain no-repeat,
+        #050507;
+      overflow: hidden;
+    }
+
+    .status-content {
+      position: relative;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .status-command {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.24);
+    }
+
+    .status-command p {
+      margin: 0.35rem 0 0;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
+    }
+
+    .stat-card {
+      min-height: 118px;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.10);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025)),
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 12px);
+    }
+
+    .stat-card.wide {
+      grid-column: 1 / -1;
+    }
+
+    .last-update {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .factions {
+      background:
+        linear-gradient(180deg, rgba(6,6,8,0.40), rgba(13,16,24,0.80)),
+        radial-gradient(circle at 75% 40%, rgba(111,57,185,0.16), transparent 28rem);
+    }
+
+    .faction-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    /* Tarjetas de propaganda para cada bloque de poder. */
+    .faction-card {
+      --accent: var(--gold);
+      position: relative;
+      min-height: 460px;
+      display: flex;
+      align-items: end;
+      overflow: hidden;
+      border: 1px solid color-mix(in srgb, var(--accent) 58%, transparent);
+      background: #090a0d;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.55);
+      isolation: isolate;
+      transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    }
+
+    .faction-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.68), 0 0 34px color-mix(in srgb, var(--accent) 24%, transparent);
+    }
+
+    .faction-card img {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.92) contrast(1.08) brightness(0.75);
+      transition: transform 520ms ease, filter 220ms ease;
+    }
+
+    .faction-card:hover img {
+      transform: scale(1.06);
+      filter: saturate(1.05) contrast(1.15) brightness(0.82);
+    }
+
+    .faction-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(180deg, transparent 8%, rgba(0,0,0,0.25) 38%, rgba(0,0,0,0.92) 100%),
+        linear-gradient(35deg, color-mix(in srgb, var(--accent) 32%, transparent), transparent 44%);
+    }
+
+    .faction-card::after {
+      content: none;
+    }
+
+    .faction-content {
+      width: 100%;
+      padding: 1rem;
+      min-height: 128px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      border-top: 1px solid color-mix(in srgb, var(--accent) 44%, transparent);
+      background: linear-gradient(180deg, rgba(8,8,10,0.45), rgba(8,8,10,0.92));
+    }
+
+    .faction-content h3 {
+      margin-bottom: 1rem;
+      min-height: 3rem;
+      display: flex;
+      align-items: flex-end;
+      font-size: clamp(0.95rem, 1.15vw, 1.22rem);
+      line-height: 1.02;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+      text-wrap: balance;
+    }
+
+    .faction-card.long-title .faction-content h3 {
+      font-size: clamp(0.82rem, 0.9vw, 1rem);
+      letter-spacing: -0.02em;
+    }
+
+    .faction-card .btn {
+      width: 100%;
+      margin-top: auto;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 80%, #111 20%), rgba(13,15,19,0.9));
+    }
+
+    .rules {
+      background:
+        radial-gradient(circle at 24% 18%, rgba(216,174,79,0.12), transparent 26rem),
+        linear-gradient(180deg, rgba(18,8,8,0.35), rgba(5,5,7,0.82));
+    }
+
+    /* Documento de reglas con estética clasificada. */
+    .classified {
+      position: relative;
+      padding: clamp(1.4rem, 4vw, 3rem);
+      border: 1px solid rgba(216,174,79,0.44);
+      background:
+        linear-gradient(135deg, rgba(33,28,20,0.88), rgba(11,12,15,0.94)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 7px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .classified::before {
+      content: "CLASIFICADO";
+      position: absolute;
+      right: -1.2rem;
+      top: 1.2rem;
+      transform: rotate(12deg);
+      padding: 0.25rem 0.9rem;
+      color: rgba(255,255,255,0.12);
+      border: 2px solid rgba(201,42,37,0.45);
+      font-size: clamp(2rem, 7vw, 6rem);
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .classified h2 {
+      margin-bottom: 1rem;
+      font-size: clamp(2rem, 4vw, 4rem);
+      text-transform: uppercase;
+    }
+
+    .classified p {
+      max-width: 680px;
+      color: #d8d2c5;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    .rule-lines {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+      margin-top: 2rem;
+    }
+
+    .rule-lines div {
+      padding: 1rem;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.22);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.6;
+      text-transform: uppercase;
+    }
+
+    .footer {
+      padding: 2rem clamp(1rem, 5vw, 5rem);
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid rgba(216,174,79,0.18);
+      background: #050507;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .loading {
+      color: var(--gold);
+    }
+
+    .error-text {
+      color: #ff7676;
+    }
+
+    /* Ajustes responsive para tablet y móvil. */
+    @media (max-width: 1180px) {
+      .faction-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .faction-card {
+        min-height: 420px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .topbar {
+        position: static;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-pills {
+        justify-content: flex-start;
+      }
+
+      .hero,
+      .status-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-grid,
+      .stats-grid,
+      .rule-lines {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .hero {
+        padding-top: 3rem;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 17vw, 4.8rem);
+      }
+
+      .faction-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .faction-card {
+        min-height: 380px;
+      }
+
+      .brand span,
+      .nav-pills {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Identidad del servidor">
+        <div class="brand-mark">
+          <img src="../ChatGPT Image 22 may 2026, 21_50_30.png" alt="Logo de The Order">
+        </div>
+        <div>
+          <strong>The Order</strong>
+        </div>
+      </div>
+
+      <nav class="nav-pills" aria-label="Navegación principal">
+        <a href="#estado">Estado</a>
+        <a href="#facciones">Facciones</a>
+        <a href="#reglas">Reglas</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="inicio">
+        <div class="hero-copy">
+          <h1>The Order</h1>
+          <p class="hero-lead">
+            Un mundo dividido entre facciones donde el orden, la guerra y la supervivencia lo controlan todo.
+          </p>
+          <div class="hero-actions">
+            <a class="btn secondary" href="https://github.com/AdryZ24/modpack" target="_blank" rel="noopener noreferrer">
+              Ver modpack
+            </a>
+          </div>
+        </div>
+
+        <aside class="hero-emblem" aria-label="Emblema de The Order"></aside>
+      </section>
+
+      <section class="section" id="estado">
+        <div class="section-inner">
+          <div class="section-title">
+            <div>
+              <h2>Estado del Servidor</h2>
+            </div>
+            <button class="btn secondary" type="button" id="refreshButton">Actualizar</button>
+          </div>
+
+          <div class="status-panel">
+            <div class="status-image" aria-hidden="true"></div>
+
+            <div class="status-content">
+              <div class="status-command">
+                <div>
+                  <span class="signal offline" id="serverStatus">Consultando</span>
+                  <p id="statusMessage">Estableciendo enlace con el servidor...</p>
+                </div>
+              </div>
+
+              <div class="stats-grid" id="serverStats">
+                <div class="stat-card">
+                  <span>Jugadores conectados</span>
+                  <strong id="playersOnline">--</strong>
+                </div>
+                <div class="stat-card">
+                  <span>IP del servidor</span>
+                  <strong id="serverIp">85.251.85.205:25565</strong>
+                </div>
+              </div>
+
+              <div class="last-update" id="lastUpdate">Última actualización: pendiente</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section factions" id="facciones">
+        <div class="section-inner">
+          <div class="section-title">
+            <div>
+              <p class="section-kicker">Partidos / Facciones</p>
+              <h2>Bloques de Poder</h2>
+            </div>
+          </div>
+
+          <div class="faction-grid">
+            <article class="faction-card long-title" style="--accent: #c92a25;">
+              <!-- Para renombrar la imagen: usa administracion.png en esta misma ruta. -->
+              <img src="../adry3.png" alt="Imagen de La Administración">
+              <div class="faction-content">
+                <h3>La Administración</h3>
+                <a class="btn" href="administracion.html">Ver facción</a>
+              </div>
+            </article>
+
+            <article class="faction-card" style="--accent: #1d5c8f;">
+              <!-- Para renombrar la imagen: usa afae.png en esta misma ruta. -->
+              <img src="../alberto2.png" alt="Imagen de AFAE">
+              <div class="faction-content">
+                <h3>AFAE</h3>
+                <a class="btn" href="afae.html">Ver facción</a>
+              </div>
+            </article>
+
+            <article class="faction-card" style="--accent: #b08a4a;">
+              <!-- Para renombrar la imagen: usa sgc.png en esta misma ruta. -->
+              <img src="../hugo2.png" alt="Imagen de SGC">
+              <div class="faction-content">
+                <h3>SGC</h3>
+                <a class="btn" href="sgc.html">Ver facción</a>
+              </div>
+            </article>
+
+            <article class="faction-card long-title" style="--accent: #d8ae4f;">
+              <!-- Para renombrar la imagen: usa militares.png en esta misma ruta. -->
+              <img src="../ivan2.png" alt="Imagen de Militares Sin Fronteras">
+              <div class="faction-content">
+                <h3>Militares Sin Fronteras</h3>
+                <a class="btn" href="militares-sin-fronteras.html">Ver facción</a>
+              </div>
+            </article>
+
+            <article class="faction-card" style="--accent: #6f39b9;">
+              <!-- Para renombrar la imagen: usa fff.png en esta misma ruta. -->
+              <img src="../adri.png" alt="Imagen de FFF">
+              <div class="faction-content">
+                <h3>FFF</h3>
+                <a class="btn" href="fff.html">Ver facción</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section rules" id="reglas">
+        <div class="section-inner">
+          <div class="classified">
+            <p class="section-kicker">Archivo oficial</p>
+            <h2>Reglas del Servidor</h2>
+            <p>
+              Las normas oficiales del servidor se publicarán próximamente.
+            </p>
+
+            <div class="rule-lines" aria-label="Marcadores de reglas futuras">
+              <div>Documento en revisión por alto mando.</div>
+              <div>Protocolos de guerra pendientes de aprobación.</div>
+              <div>Código de supervivencia en fase de redacción.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      The Order | Facciones, guerra, industria y supervivencia
+    </footer>
+  </div>
+
+  <script>
+    const SERVER_IP = "85.251.85.205:25565";
+    const STATUS_URL = "https://api.mcsrvstat.us/2/85.251.85.205:25565";
+
+    const elements = {
+      copyIpButton: document.getElementById("copyIpButton"),
+      copyFeedback: document.getElementById("copyFeedback"),
+      refreshButton: document.getElementById("refreshButton"),
+      quickStatus: document.getElementById("quickStatus"),
+      quickPlayers: document.getElementById("quickPlayers"),
+      quickVersion: document.getElementById("quickVersion"),
+      quickPing: document.getElementById("quickPing"),
+      serverStatus: document.getElementById("serverStatus"),
+      statusMessage: document.getElementById("statusMessage"),
+      playersOnline: document.getElementById("playersOnline"),
+      playersMax: document.getElementById("playersMax"),
+      serverVersion: document.getElementById("serverVersion"),
+      serverSoftware: document.getElementById("serverSoftware"),
+      serverIp: document.getElementById("serverIp"),
+      lastUpdate: document.getElementById("lastUpdate")
+    };
+
+    // Cambia el indicador visual entre ONLINE y OFFLINE.
+    function setSignal(element, isOnline, text) {
+      element.classList.toggle("online", isOnline);
+      element.classList.toggle("offline", !isOnline);
+      element.textContent = text;
+    }
+
+    function setLoadingState() {
+      setSignal(elements.serverStatus, false, "Consultando");
+      elements.statusMessage.textContent = "Estableciendo enlace con el servidor...";
+      elements.refreshButton.disabled = true;
+    }
+
+    function setOfflineState(message) {
+      setSignal(elements.serverStatus, false, "Offline");
+      elements.statusMessage.textContent = message || "El servidor no responde al canal táctico.";
+      elements.playersOnline.textContent = "0";
+      elements.serverIp.textContent = SERVER_IP;
+    }
+
+    function setOnlineState(data) {
+      const playersOnline = data.players?.online ?? 0;
+
+      setSignal(elements.serverStatus, true, "Online");
+      elements.statusMessage.textContent = "Servidor operativo.";
+      elements.playersOnline.textContent = playersOnline;
+      elements.serverIp.textContent = SERVER_IP;
+    }
+
+    function updateTimestamp() {
+      const now = new Date();
+      elements.lastUpdate.textContent = `Última actualización: ${now.toLocaleTimeString("es-ES")}`;
+    }
+
+    // Conserva la consulta original a mcsrvstat.us y refresca los datos visibles.
+    async function checkServer() {
+      setLoadingState();
+
+      try {
+        const response = await fetch(STATUS_URL, { cache: "no-store" });
+        const data = await response.json();
+
+        if (data.online) {
+          setOnlineState(data);
+        } else {
+          setOfflineState("Servidor offline o no disponible en este momento.");
+        }
+      } catch (error) {
+        setOfflineState("Error al conectar con el servicio de estado.");
+      } finally {
+        updateTimestamp();
+        elements.refreshButton.disabled = false;
+      }
+    }
+
+    // Copia la IP incluso en contextos donde Clipboard API no está disponible.
+    async function copyServerIp() {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(SERVER_IP);
+        } else {
+          const tempInput = document.createElement("input");
+          tempInput.value = SERVER_IP;
+          tempInput.setAttribute("readonly", "");
+          tempInput.style.position = "fixed";
+          tempInput.style.opacity = "0";
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand("copy");
+          document.body.removeChild(tempInput);
+        }
+
+        elements.copyFeedback.textContent = "IP copiada al portapapeles.";
+      } catch (error) {
+        elements.copyFeedback.textContent = `IP del servidor: ${SERVER_IP}`;
+      }
+
+      window.setTimeout(() => {
+        elements.copyFeedback.textContent = "";
+      }, 2600);
+    }
+
+    elements.refreshButton.addEventListener("click", checkServer);
+
+    checkServer();
+    setInterval(checkServer, 30000);
+  </script>
+</body>
+</html>
+
